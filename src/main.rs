@@ -3,7 +3,7 @@ use std::{
     fs::{self, read_to_string},
 };
 
-use calamine::{open_workbook, Data,  Reader, Xlsx};
+use calamine::{open_workbook, Data, Reader, Xlsx};
 use tlk::{Sexpr, A};
 
 use crate::tlk::parse;
@@ -11,26 +11,29 @@ use crate::tlk::parse;
 mod tlk;
 
 fn row_to_sexpr(row: &[Data], event_index: &mut i32) -> Sexpr {
-    let date = Sexpr::List(
-        row[0]
+    let mut d = vec![Sexpr::Atom(A::Symbol("date".to_string()))];
+    d.append(
+        &mut row[0]
             .to_string()
             .split('.')
             .rev()
             .map(|v| Sexpr::Atom(A::Number(v.parse::<i32>().expect("Huono päivämäärä"))))
             .collect::<Vec<Sexpr>>(),
     );
+    let date = Sexpr::List(d);
 
     let column_6 = row[6].to_string();
     let description = (if column_6.len() > 0 {
         format!(
-            "{} — {} – {}",
+            "{} / {} / {}",
             row[4].to_string(),
             row[5].to_string(),
             row[6].to_string()
         )
     } else {
-        format!("{} — {}", row[4].to_string(), row[5].to_string())
-    }).replace("\n", r#"\n"#);
+        format!("{} / {}", row[4].to_string(), row[5].to_string())
+    })
+    .replace("\n", r#"\n"#);
     let account = match row[3].to_string().as_str() {
         "Palvelumaksut" => 3210,
         s => s[..4].parse().expect("Excelissä on jotain häikkää..."),
@@ -81,6 +84,7 @@ fn main() {
         range
             .rows()
             .skip(6)
+            // .take(1)
             .for_each(|r| events.push(row_to_sexpr(r, &mut event_index)));
     }
 
