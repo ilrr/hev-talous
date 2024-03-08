@@ -1,6 +1,6 @@
 use std::{
+    borrow::BorrowMut,
     fmt,
-    fs::write,
     iter::{self, from_fn},
 };
 
@@ -38,6 +38,34 @@ impl Sexpr {
             Self::Atom(_) => panic!("Can't push to atom!"),
         }
     }
+    pub fn append(&mut self, v: Sexpr) {
+        match self {
+            Self::List(l) => match v {
+                Sexpr::List(mut m) => l.append(m.borrow_mut()),
+                _ => panic!("Can't append an atom"),
+            },
+            Self::Atom(_) => panic!("Can't append to an atom!"),
+        }
+    }
+
+    pub fn push_last(&mut self, v: Sexpr) {
+        match self {
+            Self::List(l) => match l.last_mut() {
+                Some(Self::List(m)) => m.push(v),
+                _ => panic!(),
+            },
+            _ => panic!(),
+        }
+    }
+    pub fn set_last(&mut self, v: Sexpr) {
+        match self {
+            Self::List(l) => {
+                l.pop();
+                l.push(v)
+            }
+            _ => panic!(),
+        }
+    }
     pub fn get(&self, i: usize) -> &Sexpr {
         match self {
             Self::List(l) => l.get(i).unwrap(),
@@ -70,6 +98,12 @@ impl fmt::Display for A {
             A::Number(n) => write!(f, "{}", n),
             A::Symbol(s) => write!(f, "{}", s),
         }
+    }
+}
+
+impl fmt::Debug for Sexpr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{self}")
     }
 }
 
