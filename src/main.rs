@@ -33,7 +33,7 @@ fn row_to_sexpr(row: &[Data], event_index: &mut i32) -> Sexpr {
     } else {
         format!("{} / {}", row[4].to_string(), row[5].to_string())
     })
-    .replace("\n", r#"\n"#);
+    .replace("\n", r#"\n"#).replace("ä", "\u{e4}");
     let account = match row[3].to_string().as_str() {
         "Palvelumaksut" => 3210,
         s => s[..4].parse().expect("Excelissä on jotain häikkää..."),
@@ -56,7 +56,7 @@ fn row_to_sexpr(row: &[Data], event_index: &mut i32) -> Sexpr {
                 Sexpr::List(vec![
                     Sexpr::Atom(A::Symbol("money".to_string())),
                     Sexpr::Atom(A::Number(amount)),
-                ]),
+                ]), 
             ]),
             Sexpr::List(vec![
                 Sexpr::Atom(A::Number(account)),
