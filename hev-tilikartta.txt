@@ -1,0 +1,155 @@
+-1 Vastaavaa
+  -1 Pankkitilit
+    1110 Pankkitili Aktia
+    1120 Pankkitili Nordea
+    1130 Pankkitili Holvi
+  -1 Käteistilit
+    1210 Käteiskassa
+  -1 Siirretyt tai viivästyneet erät
+    6110 Sudenpenturetkien saamiset
+    6120 Vartioiden retkien saamiset
+    6130 Vaeltajaretkien saamiset
+    6140 Kurssimaksusaamiset
+    6150 Leirimaksusaamiset
+    6190 Muut siirtosaamiset
+  -1 Rakennukset ja kalusto
+    7110 Rakennusinvestoinnit
+    7120 Kaluston hankinta
+    7130 Vene
+    7140 Kannatustuotteet
+-1 Vastattavaa
+  6195 Muut siirtovelat
+  -1 Pantit
+    6310 Avainpantit
+  -1 Ennakot
+    6410 Saadut ennakot
+-1 Tulos
+  -1 Sudenpentutoiminta
+    2110 Johtajaneuvoston kulut
+    2120 Kokous- ja ohjelmamateriaalikulut
+    2130 Retkitoiminnan (päiväretket) kulut
+    2135 Retkitoiminnan tulot
+    2140 Kilpailutoiminnan kulut
+    2145 Kilpailutoiminnan tulot
+    2150 Ikäkauden tapahtumien kulut
+    2155 Ikäkauden tapahtumien tulot
+    2160 Vanhempainillat
+    2170 Suorituskirjojen, -merkkien ja muun materiaalin kulut
+    2175 Suorituskirjojen, -merkkien ja muun materiaalin tulot 
+  -1 Seikkailijatoiminta
+    2210 Johtajaneuvoston kulut
+    2220 Kokous- ja ohjelmamateriaalin kulut
+    2230 Retkitoiminnan kulut
+    2235 Retkitoiminnan tulot
+    2240 Kilpailutoiminnan kulut
+    2245 Kilpailutoiminnan tulot
+    2250 Ikäkauden tapahtumien kulut
+    2255 Ikäkauden tapahtumien tulot
+    2260 Vanhempainillat
+    2270 Suorituskirjojen, -merkkien & muun materiaalin kulut
+    2275 Suorituskirjojen, -merkkien & muun materiaalin tulot
+  -1 Tarpojatoiminta
+    2310 Johtajaneuvoston kulut
+    2320 Kokous- ja ohjelmamateriaalikulut
+    2330 Retki- ja vaellustoiminnan kulut
+    2335 Retki- ja vaellustoiminnan tulot
+    2340 Kilpailutoiminnan kulut
+    2345 Kilpailutoiminnan tulot
+    2350 Ikäkauden tapahtumien kulut
+    2355 Ikäkauden tapahtumien tulot
+    2360 Vanhempainillat
+    2370 Suorituskirjojen, -merkkien & muun materiaalin kulut   
+  -1 Samoajatoiminta
+    2410 Johtajaneuvoston kulut
+    2420 Kokous- ja ohjelmamateriaalikulut
+    2430 Retki- ja vaellustoiminnan kulut
+    2435 Retki- ja vaellustoiminnan tulot
+    2440 Kilpailutoiminnan kulut
+    2445 Kilpailutoiminnan tulot
+    2450 Ikäkauden tapahtumien kulut
+    2455 Ikäkauden tapahtumien tulot
+    2460 Samoajaikäkauden tuki
+    2470 Suorituskirjojen, -merkkien & muun materiaalin kulut
+  -1 Vaeltajatoiminta
+    2510 Kokous- ja ohjelmamateriaalin kulut
+    2520 Retki- ja vaellustoiminnan kulut
+    2525 Retki- ja vaellustoiminnan tulot
+    2530 Kilpailutoiminnan kulut
+    2535 Kilpailutoiminnan tulot
+    2540 Vaeltajaikäkauden tuki
+    2550 Suorituskirjojen, -merkkien & muun materiaalin kulut
+  -1 Koulutustoiminta
+    2610 Johtajapäivien kulut
+    2620 Omien kurssien kulut
+    2625 Omien kurssien tulot
+    2630 Ostetun koulutuksen kulut
+    2690 Yleiset koulutusmateriaalikulut
+  -1 Lippukunnan muu toiminta
+    2710 Talvileirien kulut
+    2715 Talvileirien tulot
+    2720 Kesäleirien kulut
+    2725 Kesäleirien tulot
+    2730 Aloitusskaban kulut
+    2740 Vanhempien ja poikien retken kulut
+    2745 Vanhempien ja poikien retken tulot
+    2750 Joulujuhlan kulut
+    2760 Paraatin kulut
+    2761 Koko lippukunnan tapahtumien kulut
+    2762 Koko lippukunnan tapahtumien tulot
+    2770 Muun toiminnan kulut
+    2775 Muun toiminnan tulot
+    2780 Kansainvälinen yhteistyö
+    2790 Veneen kulut
+  -1 Tiedotus- ja viestintätoiminta
+    3110 Lippukuntalehti Päreen kulut
+    3120 WWW-kulut
+    3130 Puhelinkulut
+    3190 Muut tiedotuksen ja viestinnän kulut 
+  -1 Hallinto
+    3210 Pankkikulut
+    3220 Yhdistyksen kokouskulut
+    3230 Hallituksen kokouskulut
+    3240 Tilintarkastuskulut
+    3250 Palkitsemiset ja ansiomerkit
+    3260 Edustuskulut
+    3270 Johtajaneuvoston kokouskulut
+    3290 Yleiset hallintokulut
+  -1 Kiinteistöt
+    3310 Kolon kulut
+    3320 Kämppäisännöintikulut
+    3330 Kämpän valaistuksen ja lämmityksen kulut
+    3340 Kämpän korjausten ja huollon kulut
+    3350 Kolon vakuutuskulut
+    3360 Kämpän vakuutuskulut
+    3370 Varaston kulut
+  -1 Varainhankinta
+    -1 Omatoiminen varainhankinta
+      4110 Joulupukkipalvelun kulut
+      4115 Joulupukkipalvelun tulot
+      4120 Joulukalenterikulut
+      4125 Joulukalenteritulot
+      4130 Kevätnäyttelykulut
+      4135 Kevätnäyttelytulot
+      4140 Muiden varainhankintatempausten kulut
+      4145 Muiden varainhankintatempausten tulot
+      4155 Jäsenmaksut 
+    -1 Muu varainhankinta
+      4215 Korkotulot
+      4225 Muut tulot
+  -1 Avustukset
+    -1 Kaupungin avustukset
+      5115 Kaupungin yleisavustus
+      5125 Kaupungin leiriavustus
+      5135 Kaupungin muut avustukset
+    -1 Seurakunnan avustukset
+      5215 Seurakunnan vuosiavustus
+      5225 Seurakunnan muut avustukset 
+    -1 Muut avustukset
+      5315 Kannatusyhdistyksen avustus
+      5325 Lions Clubin avustus
+  -1 Satunnaiset
+    8010 Satunnaiset tulot
+    8020 Satunnaiset menot
+-1 Random
+  7210 Poistot
+  8130 Luottotappiot
