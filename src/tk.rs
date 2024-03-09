@@ -1,7 +1,4 @@
-use std::{
-    borrow::{Borrow, BorrowMut},
-    fmt::Debug,
-};
+use std::{borrow::BorrowMut, fmt::Debug};
 
 use crate::tlk::{Sexpr, A};
 
@@ -48,12 +45,11 @@ fn account_vec_to_sexpr(v: &mut Vec<Account>) -> Sexpr {
 }
 
 pub fn parse_tk(tk: String) -> (Sexpr, Sexpr) {
-    let mut account_map_vec: Vec<Sexpr> = Vec::new();
     let mut events_vec: Vec<Sexpr> = Vec::new();
     let mut indent_stack: Vec<i32> = vec![];
     let mut account_stack: Vec<Vec<Account>> = vec![];
     let mut lines: Vec<&str> = tk.lines().rev().collect();
-    // for line in tk.lines() {
+
     while lines.len() > 0 {
         let line = lines.pop().unwrap();
         let mut line_iter = line.trim_end().chars().peekable();
@@ -93,77 +89,51 @@ pub fn parse_tk(tk: String) -> (Sexpr, Sexpr) {
             _ => panic!(),
         };
 
-        // let new_sexpr = Sexpr::List(vec![
-        //     Sexpr::Atom(A::Symbol("account".to_string())),
-        //     Sexpr::Atom(A::Number(account_n)),
-        //     Sexpr::Atom(A::String(account_name)),
-        //     Sexpr::List(Vec::new()),
-        // ]);
         let new_account = init_account(account_n, account_name);
         let top_indent = indent_stack.last();
 
-        // println!("{indent}, '{line}'");
         match top_indent {
             None => {
                 account_stack.push(vec![new_account]);
                 indent_stack.push(indent);
             }
             Some(&top_i) => {
-                // println!("({})", top_i > indent);
                 if top_i == indent {
-                    // account_stack.last_mut().unwrap().last_mut().unwrap().push_child(new_account);
                     account_stack.last_mut().unwrap().push(new_account);
                 } else if top_i < indent {
                     account_stack.push(Vec::new());
                     account_stack.last_mut().unwrap().push(new_account);
                     indent_stack.push(indent);
                 } else {
-                    // println!("!");
                     let mut i = indent_stack.pop().unwrap();
-                    // println!("{}", i >= indent);
                     while i > indent {
-                        // println!(" > {account_stack:?}\n   {indent_stack:?} {i}");
                         let mut top = account_stack.pop().unwrap();
-                        // println!(" > > {top:?}");
                         account_stack
                             .last_mut()
                             .unwrap()
                             .last_mut()
                             .unwrap()
                             .append_children(top.as_mut());
-                        // account_stack.last_mut().unwrap().last_mut().unwrap().push_child(top);
                         i = indent_stack.pop().unwrap();
                     }
-                   // account_stack.push(vec![new_account]);
-                   lines.push(line);
+                    lines.push(line);
                     indent_stack.push(indent);
                 }
             }
         }
-
-
-        // println!("{account_stack:?} {indent_stack:?}\n");
     }
-        let mut i = indent_stack.pop().unwrap();
-        while i > 0 {
-            // println!(" > {account_stack:?}\n   {indent_stack:?} {i}");
-            let mut top = account_stack.pop().unwrap();
-            // println!(" > > {top:?}");
-            account_stack
-                .last_mut()
-                .unwrap()
-                .last_mut()
-                .unwrap()
-                .append_children(top.as_mut());
-            i = indent_stack.pop().unwrap();
-        }
-    // println!(". {account_stack:?}");
+    let mut i = indent_stack.pop().unwrap();
+    while i > 0 {
+        let mut top = account_stack.pop().unwrap();
+        account_stack
+            .last_mut()
+            .unwrap()
+            .last_mut()
+            .unwrap()
+            .append_children(top.as_mut());
+        i = indent_stack.pop().unwrap();
+    }
     let mut a: Vec<Account> = account_stack.into_iter().flatten().collect();
-    // let accounts_vec: Vec<Sexpr> = account_stack
-    //     .iter_mut()
-    //     .map(|a| account_vec_to_sexpr(a))
-    //     .collect();
     let accounts_vec = a.iter_mut().map(|a| a.to_sexpr()).collect();
-    // println!(". {accounts_vec:?}");
     (Sexpr::List(accounts_vec), Sexpr::List(events_vec))
 }

@@ -135,7 +135,6 @@ impl Stack<Sexpr> for Vec<Sexpr> {
     }
 }
 
-
 pub fn parse(s: String) -> Sexpr {
     let mut stack: Vec<Sexpr> = Vec::new();
     let mut iter = s.chars().peekable();
@@ -144,7 +143,6 @@ pub fn parse(s: String) -> Sexpr {
             '(' => stack.push_empty(),
             ')' => {
                 let top = stack.pop().expect("Unmatched parentheses");
-                // println!("1- {top}");
                 if stack.is_empty() {
                     return top;
                 }
@@ -155,7 +153,6 @@ pub fn parse(s: String) -> Sexpr {
                     .chain(from_fn(|| iter.by_ref().next_if(|c| *c != '"')))
                     .collect();
                 iter.next();
-                // println!("{s}");
                 stack.push_top(Sexpr::Atom(A::String(s[1..].to_string())));
             }
             '0'..='9' | '-' => {
@@ -173,7 +170,6 @@ pub fn parse(s: String) -> Sexpr {
                     .chain(from_fn(|| iter.by_ref().next_if(|c| *c != ' ')))
                     .collect();
                 iter.next();
-                // println!("{s}");
                 stack.push_top(Sexpr::Atom(A::Symbol(s.to_string())));
             }
         }

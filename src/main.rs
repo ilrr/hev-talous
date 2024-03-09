@@ -1,6 +1,6 @@
 use std::{
     env,
-    fs::{self, read_to_string}, borrow::Borrow,
+    fs::{self, read_to_string},
 };
 
 use calamine::{open_workbook, Data, Reader, Xlsx};
@@ -90,13 +90,6 @@ fn main() {
         Sexpr::Atom(A::Number(12)),
         Sexpr::Atom(A::Number(31)),
     ]);
-    // let (a, t) =
-    // parse_tk("-1 A\n 1 B\n 2 C\n 30 D\n  31 Da\n  32 Db\n-1 N\n      33 m\n-1 -1".to_string());
-    // println!("+ {a}");
-    // println!("-1 A\n 1 B\n 2 C\n 30 D\n  31 Da\n  32 Db\n-1 N\n      33 m\n-1 -1");
-    // let (a, t) =
-    //       parse_tk("-1 A\n 1 B\n 2 C\n-1 N".to_string());  println!("{a}\n{t}");
-    //
 
     let mut events: Vec<Sexpr>;
     let mut account_map = Sexpr::List(Vec::new());
@@ -114,10 +107,6 @@ fn main() {
             Sexpr::Atom(A::String("Tilikauden avaus 2023".to_string())),
             evs,
         ])];
-        // match evs {
-        // Sexpr::List(l) => events = ,
-        // _ => panic!(),
-        // }
     } else {
         events = Vec::new();
     }
@@ -125,7 +114,6 @@ fn main() {
     let mut w: Xlsx<_> =
         open_workbook(workbook).expect(&format!("Virheellinen Excel-polku: {workbook}"));
     let mut event_index: i32 = 2;
-    // let mut events: Vec<Sexpr> = Vec::new();
 
     if let Ok(range) = w.worksheet_range("Päiväkirja") {
         range
