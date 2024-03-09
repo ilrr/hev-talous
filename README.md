@@ -11,7 +11,7 @@ Ohjelma vaatii kolme tiedostopolkua komentoriviargumentteina, tässä järjestyk
 ### Tilikarttatiedostoformaatin kuvaus
 Kukin tili määritellään omalla rivillään. Tyhjiä rivejä ei sallita. Rivi alkaa sisennyksellä, joka voi olla nolla tai useampi tulostumaton (_witespace_) merkki (ei rivinvaihto). Perustason tilit (Vastaavaa, Vastattavaa, Tulos) ovat sisentämättömiä. Tilin alatilit on lueteltu sen alle suuremmalla sisennystasolla. Tilin kaikkien alatilien tulee olla samalla sisennystasolla.
 
-Sisennystä seuraa muotoa `-?\d+` oleva tilin numero, tilin nimi ja mahdollinen alkusaldo, kaikki riviväleillä eroteltuna. Alkusaldo on muotoa `-?\d+[.,]?\d*[€$]`, eli (mahdollisesti desimaaliosan sisältävä) lukuarvo jota seuraa €- tai $-merkki ilman välimerkkejä. Desimaalierottimena saa käyttää sekä pistettä että pilkkua, vaikka sekaisin samassa tiedostossa.
+Sisennystä seuraa muotoa `-?\d+` oleva tilin numero, tilin nimi ja mahdollinen alkusaldo, kaikki välilyönneillä eroteltuna. Alkusaldo on muotoa `-?\d+[.,]?\d*[€$]`, eli (mahdollisesti desimaaliosan sisältävä) lukuarvo jota seuraa €- tai $-merkki ilman välimerkkejä. Desimaalierottimena saa käyttää sekä pistettä että pilkkua, vaikka sekaisin samassa tiedostossa.
 
 Esimerkkitilikarttamäärittely ehkä selventää asiaa:
 ```
