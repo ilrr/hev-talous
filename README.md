@@ -9,7 +9,7 @@ Ohjelma vaatii kolme tiedostopolkua komentoriviargumentteina, tässä järjestyk
 - tiedostopolku, johon valmis Tappio-tiedosto kirjoitetaan
 
 ### Tilikarttatiedostoformaatin kuvaus
-Tiedoston alussa on kolme riviä, joista ensimmäinen kertoo tilikauden otsakkeen. Seuraavat kaksi ovat päivämääriä muodossa `d.m.y`, jotka kertovat tilikauden avaus- ja lopetuspäivän. Näitä rivejä seuraa yksi tyhjä rivi ja tilikarttamäärittely.
+Tiedoston alussa on kolme riviä, joista ensimmäinen kertoo tilikauden otsakkeen. Seuraavat kaksi ovat muodossa `d.m.y` olevia päivämääriä, jotka kertovat tilikauden avaus- ja lopetuspäivän. Näitä rivejä seuraa yksi tyhjä rivi ja tilikarttamäärittely.
 
 Tilikarttamäärittelyssä kukin tili määritellään omalla rivillään. Tyhjiä rivejä ei sallita. Rivi alkaa sisennyksellä, joka voi olla nolla tai useampi tulostumaton (_witespace_) merkki (ei rivinvaihto). Perustason tilit (Vastaavaa, Vastattavaa, Tulos) ovat sisentämättömiä. Tilin alatilit on lueteltu sen alle suuremmalla sisennystasolla. Tilin kaikkien alatilien tulee olla samalla sisennystasolla.
 
