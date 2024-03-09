@@ -4,11 +4,13 @@ use std::{
     iter::{self, from_fn},
 };
 
+#[derive(Clone)]
 pub enum Sexpr {
     Atom(A),
     List(Vec<Sexpr>),
 }
 
+#[derive(Clone)]
 pub enum A {
     String(String),
     Number(i32),
@@ -107,7 +109,7 @@ impl fmt::Debug for Sexpr {
     }
 }
 
-trait Stack<T> {
+pub trait Stack<T> {
     fn new() -> Self;
     fn push(&mut self, v: T) -> ();
     fn pop(&mut self) -> T;
@@ -132,6 +134,7 @@ impl Stack<Sexpr> for Vec<Sexpr> {
         self.push(Sexpr::List(Vec::new()));
     }
 }
+
 
 pub fn parse(s: String) -> Sexpr {
     let mut stack: Vec<Sexpr> = Vec::new();

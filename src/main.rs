@@ -1,6 +1,6 @@
 use std::{
     env,
-    fs::{self, read_to_string},
+    fs::{self, read_to_string}, borrow::Borrow,
 };
 
 use calamine::{open_workbook, Data, Reader, Xlsx};
@@ -35,7 +35,8 @@ fn row_to_sexpr(row: &[Data], event_index: &mut i32) -> Sexpr {
     } else {
         format!("{} / {}", row[4].to_string(), row[5].to_string())
     })
-    .replace("\n", r#"\n"#).replace("ä", "\u{e4}");
+    .replace("\n", r#"\n"#)
+    .replace("ä", "\u{e4}");
     let account = match row[3].to_string().as_str() {
         "Palvelumaksut" => 3210,
         s => s[..4].parse().expect("Excelissä on jotain häikkää..."),
@@ -58,7 +59,7 @@ fn row_to_sexpr(row: &[Data], event_index: &mut i32) -> Sexpr {
                 Sexpr::List(vec![
                     Sexpr::Atom(A::Symbol("money".to_string())),
                     Sexpr::Atom(A::Number(amount)),
-                ]), 
+                ]),
             ]),
             Sexpr::List(vec![
                 Sexpr::Atom(A::Number(account)),
@@ -90,7 +91,9 @@ fn main() {
         Sexpr::Atom(A::Number(31)),
     ]);
     // let (a, t) =
-    //     parse_tk("-1 A\n 1 B\n 2 C\n 30 D\n  31 Da\n  32 Db\n-1 N\n      33 m\n-1 -1".to_string());
+    // parse_tk("-1 A\n 1 B\n 2 C\n 30 D\n  31 Da\n  32 Db\n-1 N\n      33 m\n-1 -1".to_string());
+    // println!("+ {a}");
+    // println!("-1 A\n 1 B\n 2 C\n 30 D\n  31 Da\n  32 Db\n-1 N\n      33 m\n-1 -1");
     // let (a, t) =
     //       parse_tk("-1 A\n 1 B\n 2 C\n-1 N".to_string());  println!("{a}\n{t}");
     //
@@ -102,24 +105,33 @@ fn main() {
         let account = read_to_string(input_ledger).expect("Tiedoston luku ei onnistunut");
         let (acc, evs) = parse_tk(account);
         account_map = acc;
-        match evs {
-            Sexpr::List(l) => events = l,
-            _ => panic!(),
-        }
+        // println!("{account_map}");
+        let opening_date = start_date.clone();
+        events = vec![Sexpr::List(vec![
+            Sexpr::Atom(A::Symbol("event".to_string())),
+            Sexpr::Atom(A::Number(1)),
+            opening_date,
+            Sexpr::Atom(A::String("Tilikauden avaus 2023".to_string())),
+            evs,
+        ])];
+        // match evs {
+        // Sexpr::List(l) => events = ,
+        // _ => panic!(),
+        // }
     } else {
         events = Vec::new();
     }
 
     let mut w: Xlsx<_> =
         open_workbook(workbook).expect(&format!("Virheellinen Excel-polku: {workbook}"));
-    let mut event_index: i32 = 0;
+    let mut event_index: i32 = 2;
     // let mut events: Vec<Sexpr> = Vec::new();
 
     if let Ok(range) = w.worksheet_range("Päiväkirja") {
         range
             .rows()
             .skip(6)
-            // .take(1)
+            // .take(0)
             .for_each(|r| events.push(row_to_sexpr(r, &mut event_index)));
     }
 
@@ -140,7 +152,12 @@ fn main() {
                 Sexpr::Atom(A::String("HEV 2023".to_string())),
                 start_date,
                 end_date,
-                account_map,
+                {
+                    let mut am =
+                        Sexpr::List(vec![Sexpr::Atom(A::Symbol("account-map".to_string()))]);
+                    am.append(account_map);
+                    am
+                },
                 Sexpr::List(events),
             ]),
         ])
