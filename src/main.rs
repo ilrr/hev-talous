@@ -12,17 +12,21 @@ use crate::tlk::parse;
 mod tk;
 mod tlk;
 
-fn row_to_sexpr(row: &[Data], event_index: &mut i32) -> Sexpr {
+fn date_str_to_sexpr(s: String) -> Sexpr {
     let mut d = vec![Sexpr::Atom(A::Symbol("date".to_string()))];
     d.append(
-        &mut row[0]
+        &mut s
             .to_string()
             .split('.')
             .rev()
             .map(|v| Sexpr::Atom(A::Number(v.parse::<i32>().expect("Huono päivämäärä"))))
             .collect::<Vec<Sexpr>>(),
     );
-    let date = Sexpr::List(d);
+    Sexpr::List(d)
+}
+
+fn row_to_sexpr(row: &[Data], event_index: &mut i32) -> Sexpr {
+    let date = date_str_to_sexpr(row[0].to_string());
 
     let column_6 = row[6].to_string();
     let description = (if column_6.len() > 0 {
@@ -78,7 +82,7 @@ fn main() {
     let input_ledger = &args[2];
     let output_ledger = &args[3];
 
-    let start_date = Sexpr::List(vec![
+    /*let start_date = Sexpr::List(vec![
         Sexpr::Atom(A::Symbol("date".to_string())),
         Sexpr::Atom(A::Number(2023)),
         Sexpr::Atom(A::Number(1)),
@@ -89,22 +93,30 @@ fn main() {
         Sexpr::Atom(A::Number(2023)),
         Sexpr::Atom(A::Number(12)),
         Sexpr::Atom(A::Number(31)),
-    ]);
+    ]); */
+    let mut start_date = Sexpr::Atom(A::Symbol("no-date".to_string()));
+    let mut end_date = Sexpr::Atom(A::Symbol("no-date".to_string()));
+    let mut title = Sexpr::Atom(A::String("".to_string()));
 
     let mut events: Vec<Sexpr>;
     let mut account_map = Sexpr::List(Vec::new());
     let input_ledger_is_tlk = input_ledger.ends_with(".tlk");
     if !input_ledger_is_tlk {
-        let account = read_to_string(input_ledger).expect("Tiedoston luku ei onnistunut");
-        let (acc, evs) = parse_tk(account);
+        let ledger = read_to_string(input_ledger).expect("Tiedoston luku ei onnistunut");
+        let (header, account) = ledger.split_once("\n\n").unwrap();
+        let (acc, evs) = parse_tk(account.to_string());
         account_map = acc;
-        // println!("{account_map}");
+        let mut header_vec = header.split("\n");
+        title = Sexpr::Atom(A::String(header_vec.next().expect("Epäkelpo tiedosto").to_string()));
+        start_date = date_str_to_sexpr(header_vec.next().expect("Epäkelpo tiedosto").to_string());
+        end_date = date_str_to_sexpr(header_vec.next().expect("Epäkelpo tiedosto").to_string());
+         
         let opening_date = start_date.clone();
         events = vec![Sexpr::List(vec![
             Sexpr::Atom(A::Symbol("event".to_string())),
             Sexpr::Atom(A::Number(1)),
             opening_date,
-            Sexpr::Atom(A::String("Tilikauden avaus 2023".to_string())),
+            Sexpr::Atom(A::String("Tilikauden avaus".to_string())),
             evs,
         ])];
     } else {
@@ -137,7 +149,7 @@ fn main() {
             Sexpr::Atom(A::Symbol("finances".to_string())),
             Sexpr::List(vec![
                 Sexpr::Atom(A::Symbol("fiscal-year".to_string())),
-                Sexpr::Atom(A::String("HEV 2023".to_string())),
+                title,
                 start_date,
                 end_date,
                 {
