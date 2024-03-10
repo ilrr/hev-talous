@@ -52,6 +52,7 @@ pub fn parse_tk(tk: String) -> (Sexpr, Sexpr) {
 
     while lines.len() > 0 {
         let line = lines.pop().unwrap();
+        let mut line2 = line;
         let mut line_iter = line.trim_end().chars().peekable();
         let indent = {
             let mut l: i32 = 0;
@@ -82,6 +83,7 @@ pub fn parse_tk(tk: String) -> (Sexpr, Sexpr) {
                             Sexpr::Atom(A::Number(amount)),
                         ]),
                     ]));
+                    line2 = line.rsplit_once(' ').unwrap().0;
                     v1.to_string()
                 }
                 _ => line_iter.collect::<String>(),
@@ -89,6 +91,7 @@ pub fn parse_tk(tk: String) -> (Sexpr, Sexpr) {
             _ => panic!(),
         };
 
+        // println!("{line}");
         let new_account = init_account(account_n, account_name);
         let top_indent = indent_stack.last();
 
@@ -116,7 +119,7 @@ pub fn parse_tk(tk: String) -> (Sexpr, Sexpr) {
                             .append_children(top.as_mut());
                         i = indent_stack.pop().unwrap();
                     }
-                    lines.push(line);
+                    lines.push(line2);
                     indent_stack.push(indent);
                 }
             }
