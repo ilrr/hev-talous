@@ -40,7 +40,6 @@ fn row_to_sexpr(row: &[Data], event_index: &mut i32) -> Sexpr {
         format!("{} / {}", row[4].to_string(), row[5].to_string())
     })
     .replace("\n", r#"\n"#)
-    .replace("ä", "\u{e4}");
     let account = match row[3].to_string().as_str() {
         "Palvelumaksut" => 3210,
         s => s[..4].parse().expect("Excelissä on jotain häikkää..."),
@@ -114,7 +113,7 @@ fn main() {
         let opening_date = start_date.clone();
         events = vec![Sexpr::List(vec![
             Sexpr::Atom(A::Symbol("event".to_string())),
-            Sexpr::Atom(A::Number(1)),
+            Sexpr::Atom(A::Number(0)),
             opening_date,
             Sexpr::Atom(A::String("Tilikauden avaus".to_string())),
             evs,
@@ -125,7 +124,7 @@ fn main() {
 
     let mut w: Xlsx<_> =
         open_workbook(workbook).expect(&format!("Virheellinen Excel-polku: {workbook}"));
-    let mut event_index: i32 = 2;
+    let mut event_index: i32 = 1;
 
     if let Ok(range) = w.worksheet_range("Päiväkirja") {
         range
