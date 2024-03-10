@@ -24,7 +24,7 @@ HEV 2023
 -1 Vastattavaa
   6195 Muut siirtovelat
   6300 Pantit
-    6310 Avainpantit
+    6315 Avainpantit
   6400 Ennakot
     6410 Saadut ennakot
 -1 Tulos
