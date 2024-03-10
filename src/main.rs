@@ -46,9 +46,9 @@ fn row_to_sexpr(row: &[Data], event_index: &mut i32) -> Sexpr {
     };
     let amount: i32 = (row[7]
         .to_string()
-        .parse::<f32>()
+        .parse::<f64>()
         .expect("Excelissä on jotain häikkää...")
-        * 100.0) as i32;
+        * 100.0).round() as i32;
     let i = event_index.to_owned();
     *event_index += 1;
     Sexpr::List(vec![
