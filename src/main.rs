@@ -1,6 +1,7 @@
 use std::{
-    env,
-    fs::{self, read_to_string},
+    env::{self, args},
+    fs::{self, read_to_string, File},
+    io::{LineWriter, Write},
 };
 
 use calamine::{open_workbook, Data, Reader, Xlsx};
@@ -76,10 +77,66 @@ fn row_to_sexpr(row: &[Data], event_index: &mut i32) -> Sexpr {
     ])
 }
 
-fn main() {
+fn row_to_tampio(
+    row: &[Data],
+    prev_row: Option<&[Data]>,
+    /* next_row:Option<&[Data]>, */ event_index: &mut i32,
+) -> String {
+    let date = row[0].to_string();
+    let c4 = row[4].to_string();
+    let c5 = row[5].to_string();
+    let c6 = row[6].to_string();
+    let mut description = (if c6.len() > 0 {
+        format!("{} / {} / {}", c4, c5, c6)
+    } else {
+        format!("{} / {}", c4, c5)
+    })
+    .replace("\n", "¶");
+    description = if description.contains('"') {
+        format!("»{description}»")
+    } else {
+        format!("\"{description}\"")
+    };
+    let account = match row[3].to_string().as_str() {
+        "Palvelumaksut" => 3210,
+        s => s[..4].parse().expect("Excelissä on jotain häikkää..."),
+    };
+    let amount: f64 = -row[7]
+        .to_string()
+        .parse::<f64>()
+        .expect("Excelissä on jotain häikkää...");
+    // let i = event_index.to_owned();
+    if let Some(prev_row) = prev_row {
+        if !(prev_row[4].to_string() == c4 && prev_row[6].to_string() == c6 && !c6.is_empty()) {
+            *event_index += 1;
+        }
+    }
+    format!("{date} {description} H{event_index}\n    {account}: {amount:.2}\n")
+}
+
+fn main() -> std::io::Result<()> {
     let args = env::args().collect::<Vec<String>>();
     let workbook = &args[1];
     let input_ledger = &args[2];
+
+    if args.len() == 3 {
+        let mut w: Xlsx<_> =
+            open_workbook(workbook).expect(&format!("Virheellinen Excel-polku: {workbook}"));
+        let mut event_index: i32 = 1;
+        let f = File::create(input_ledger)?;
+        let mut f = LineWriter::new(f);
+
+        if let Ok(range) = w.worksheet_range("Päiväkirja") {
+            let mut prev_row = None;
+            for row in range.rows().skip(6) {
+                f.write_all(row_to_tampio(row, prev_row, &mut event_index).as_bytes())?;
+                prev_row = Some(row);
+            }
+        }
+        return f.flush()
+        // return Ok(());
+    }
+
     let output_ledger = &args[3];
 
     /*let start_date = Sexpr::List(vec![
@@ -107,10 +164,12 @@ fn main() {
         let (acc, evs) = parse_tk(account.to_string());
         account_map = acc;
         let mut header_vec = header.split("\n");
-        title = Sexpr::Atom(A::String(header_vec.next().expect("Epäkelpo tiedosto").to_string()));
+        title = Sexpr::Atom(A::String(
+            header_vec.next().expect("Epäkelpo tiedosto").to_string(),
+        ));
         start_date = date_str_to_sexpr(header_vec.next().expect("Epäkelpo tiedosto").to_string());
         end_date = date_str_to_sexpr(header_vec.next().expect("Epäkelpo tiedosto").to_string());
-         
+
         let opening_date = start_date.clone();
         events = vec![Sexpr::List(vec![
             Sexpr::Atom(A::Symbol("event".to_string())),
@@ -163,5 +222,5 @@ fn main() {
         ])
     }
 
-    fs::write(output_ledger, a.to_string()).expect("Tiedoston kirjoittaminen epäonnistui");
+    fs::write(output_ledger, a.to_string()) //.expect("Tiedoston kirjoittaminen epäonnistui");
 }
