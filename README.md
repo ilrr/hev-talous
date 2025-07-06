@@ -1,11 +1,12 @@
 ## Käyttö
 Joudut itse kääntämään ohjelman :-)
 
-Ohjelma vaatii kolme tiedostopolkua komentoriviargumentteina, tässä järjestyksessä:
+Ohjelma vaatii kaksi tai kolme tiedostopolkua komentoriviargumentteina, tässä järjestyksessä:
 - Päiväkirja-excel Holvista
 - tilikarttatiedosto
   - jos tiedostopääte on .tlk käsitellään tiedostoa Tappion tilikarttatiedostoformaattina, ja sen tilitapahtumalista ylikirjoitetaan Holvista tuoduilla
   - muussa tapauksessa tiedostoa käsitellään jäjelmpänä kuvaillun tilikarttaformaatin mukaisesti
+  - jos tiedosto jätetään kokonaan määrittämättä ohjelmaa tekeekin Tappio-tiedoston sijasta [Tampio](https://github.com/ilrr/tampio)-kirjanpitoon sopivan listan tilitapahtumia
 - tiedostopolku, johon valmis Tappio-tiedosto kirjoitetaan
 
 ### Tilikarttatiedostoformaatin kuvaus
