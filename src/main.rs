@@ -13,7 +13,7 @@ use crate::tlk::parse;
 mod tk;
 mod tlk;
 
-const OFFSET: i32 = 1;
+const OFFSET: usize = 1;
 
 fn date_str_to_sexpr(s: String) -> Sexpr {
     let mut d = vec![Sexpr::Atom(A::Symbol("date".to_string()))];
