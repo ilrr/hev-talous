@@ -13,6 +13,8 @@ use crate::tlk::parse;
 mod tk;
 mod tlk;
 
+const OFFSET: i32 = 1;
+
 fn date_str_to_sexpr(s: String) -> Sexpr {
     let mut d = vec![Sexpr::Atom(A::Symbol("date".to_string()))];
     d.append(
@@ -27,29 +29,30 @@ fn date_str_to_sexpr(s: String) -> Sexpr {
 }
 
 fn row_to_sexpr(row: &[Data], event_index: &mut i32) -> Sexpr {
-    let date = date_str_to_sexpr(row[0].to_string());
+    let date = date_str_to_sexpr(row[0+OFFSET].to_string());
 
-    let column_6 = row[6].to_string();
+    let column_6 = row[6+OFFSET].to_string();
     let description = (if column_6.len() > 0 {
         format!(
             "{} / {} / {}",
-            row[4].to_string(),
-            row[5].to_string(),
-            row[6].to_string()
+            row[4+OFFSET].to_string(),
+            row[5+OFFSET].to_string(),
+            row[6+OFFSET].to_string()
         )
     } else {
-        format!("{} / {}", row[4].to_string(), row[5].to_string())
+        format!("{} / {}", row[4+OFFSET].to_string(), row[5+OFFSET].to_string())
     })
     .replace("\n", r#"\n"#);
-    let account = match row[3].to_string().as_str() {
+    let account = match row[3+OFFSET].to_string().as_str() {
         "Palvelumaksut" => 3210,
         s => s[..4].parse().expect("Excelissä on jotain häikkää..."),
     };
-    let amount: i32 = (row[7]
+    let amount: i32 = (row[7+OFFSET]
         .to_string()
         .parse::<f64>()
         .expect("Excelissä on jotain häikkää...")
-        * 100.0).round() as i32;
+        * 100.0)
+        .round() as i32;
     let i = event_index.to_owned();
     *event_index += 1;
     Sexpr::List(vec![
@@ -81,10 +84,10 @@ fn row_to_tampio(
     prev_row: Option<&[Data]>,
     /* next_row:Option<&[Data]>, */ event_index: &mut i32,
 ) -> String {
-    let date = row[0].to_string();
-    let c4 = row[4].to_string();
-    let c5 = row[5].to_string();
-    let c6 = row[6].to_string();
+    let date = row[0 + OFFSET].to_string();
+    let c4 = row[4 + OFFSET].to_string();
+    let c5 = row[5 + OFFSET].to_string();
+    let c6 = row[6 + OFFSET].to_string();
     let mut description = (if c6.len() > 0 {
         format!("{} / {} / {}", c4, c5, c6)
     } else {
@@ -96,17 +99,22 @@ fn row_to_tampio(
     } else {
         format!("\"{description}\"")
     };
-    let account = match row[3].to_string().as_str() {
+    let account = match row[3 + OFFSET].to_string().as_str() {
         "Palvelumaksut" => 3210,
-        s => s[..4].parse().expect("Excelissä on jotain häikkää..."),
+        "Luokittelemattomat" => 8000,
+        s => s[..4].parse().unwrap_or(8000), // .expect("Excelissä on jotain häikkää..."),
     };
-    let amount: f64 = -row[7]
+    // println!("{}", row[7 + OFFSET]);
+    let amount: f64 = -row[7 + OFFSET]
         .to_string()
         .parse::<f64>()
         .expect("Excelissä on jotain häikkää...");
     // let i = event_index.to_owned();
     if let Some(prev_row) = prev_row {
-        if !(prev_row[4].to_string() == c4 && prev_row[6].to_string() == c6 && !c6.is_empty()) {
+        if !(prev_row[4 + OFFSET].to_string() == c4
+            && prev_row[6 + OFFSET].to_string() == c6
+            && !c6.is_empty())
+        {
             *event_index += 1;
         }
     }
@@ -132,7 +140,7 @@ fn main() -> std::io::Result<()> {
                 prev_row = Some(row);
             }
         }
-        return f.flush()
+        return f.flush();
         // return Ok(());
     }
 
