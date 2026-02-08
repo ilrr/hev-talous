@@ -29,25 +29,29 @@ fn date_str_to_sexpr(s: String) -> Sexpr {
 }
 
 fn row_to_sexpr(row: &[Data], event_index: &mut i32) -> Sexpr {
-    let date = date_str_to_sexpr(row[0+OFFSET].to_string());
+    let date = date_str_to_sexpr(row[0 + OFFSET].to_string());
 
-    let column_6 = row[6+OFFSET].to_string();
+    let column_6 = row[6 + OFFSET].to_string();
     let description = (if column_6.len() > 0 {
         format!(
             "{} / {} / {}",
-            row[4+OFFSET].to_string(),
-            row[5+OFFSET].to_string(),
-            row[6+OFFSET].to_string()
+            row[4 + OFFSET].to_string(),
+            row[5 + OFFSET].to_string(),
+            row[6 + OFFSET].to_string()
         )
     } else {
-        format!("{} / {}", row[4+OFFSET].to_string(), row[5+OFFSET].to_string())
+        format!(
+            "{} / {}",
+            row[4 + OFFSET].to_string(),
+            row[5 + OFFSET].to_string()
+        )
     })
     .replace("\n", r#"\n"#);
-    let account = match row[3+OFFSET].to_string().as_str() {
+    let account = match row[3 + OFFSET].to_string().as_str() {
         "Palvelumaksut" => 3210,
         s => s[..4].parse().expect("Excelissä on jotain häikkää..."),
     };
-    let amount: i32 = (row[7+OFFSET]
+    let amount: i32 = (row[7 + OFFSET]
         .to_string()
         .parse::<f64>()
         .expect("Excelissä on jotain häikkää...")
@@ -135,10 +139,12 @@ fn main() -> std::io::Result<()> {
 
         if let Ok(range) = w.worksheet_range("Päiväkirja") {
             let mut prev_row = None;
+            write!(&mut f, "holvi = 1130\nAUTO holvi [\n")?;
             for row in range.rows().skip(6) {
                 f.write_all(row_to_tampio(row, prev_row, &mut event_index).as_bytes())?;
                 prev_row = Some(row);
             }
+            write!(&mut f, "]")?;
         }
         return f.flush();
         // return Ok(());
